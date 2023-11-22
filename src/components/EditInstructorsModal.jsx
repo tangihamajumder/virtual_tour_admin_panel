@@ -7,19 +7,23 @@ import {
   TextField,
 } from "@mui/material";
 import Button from "@mui/material/Button";
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import {
   useEditInstructorMutation,
   useGetInstructorByIdQuery,
 } from "../redux/features/instructors/instructorsApi.js";
+import CustomSnackBar from "./CustomSnackbar.jsx";
 
-const EditInstructorsModal = ({ open, onClose, instructorId }) => {
+const EditInstructorsModal = ({ openModal, onClose, instructorId }) => {
   const [instructorDetails, setInstructorDetails] = useState({
     imgURL: "",
     prof: "",
     desc: "",
   });
+  const [open, setOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [severity, setSeverity] = useState("success");
 
   const { data: instructorDetail } = useGetInstructorByIdQuery(instructorId);
 
@@ -57,7 +61,18 @@ const EditInstructorsModal = ({ open, onClose, instructorId }) => {
       payload: instructorDetails,
     };
     const res = await editInstructor(data).unwrap();
-    onClose();
+    if (res?.success) {
+      setOpen(true);
+      setSeverity("success");
+      setSnackbarMessage(res?.message);
+      setTimeout(() => {
+        onClose();
+      }, 700);
+    } else {
+      setOpen(true);
+      setSeverity("error");
+      setSnackbarMessage("Something went wrong");
+    }
   };
 
   const handleFieldChange = (e) => {
@@ -66,7 +81,7 @@ const EditInstructorsModal = ({ open, onClose, instructorId }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={openModal} onClose={onClose}>
       <DialogTitle>Edit course Information</DialogTitle>
       <DialogContent>
         <Grid container spacing={3} sx={{ mt: 1 }}>
@@ -116,6 +131,12 @@ const EditInstructorsModal = ({ open, onClose, instructorId }) => {
           Submit
         </Button>
       </DialogActions>
+      <CustomSnackBar
+        open={open}
+        setOpen={setOpen}
+        message={snackbarMessage}
+        severity={severity}
+      />
     </Dialog>
   );
 };

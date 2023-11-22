@@ -1,11 +1,11 @@
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
-const DeleteInstructorModal = ({open, onClose, modalMessage, onConfirmDelete}) => {
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+const DeleteInstructorModal = ({openModal, onClose, modalMessage, onConfirmDelete}) => {
     return (
-        <Dialog open={open} onClose={onClose}>
+        <Dialog open={openModal} onClose={onClose}>
             <DialogTitle>Confirm Deletion</DialogTitle>
             <DialogContent>
                 {modalMessage}

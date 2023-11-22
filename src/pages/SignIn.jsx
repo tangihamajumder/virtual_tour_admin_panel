@@ -1,3 +1,4 @@
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Button,
   Container,
@@ -5,20 +6,24 @@ import {
   InputAdornment,
   TextField,
 } from "@mui/material";
-import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { Link, useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-import loginImage from "../assets/12146011_Wavy_Gen-01_Single-07.jpg";
 import { useForm } from "react-hook-form";
+import loginImage from "../assets/12146011_Wavy_Gen-01_Single-07.jpg";
+import CustomSnackBar from "../components/CustomSnackbar.jsx";
 import { useUserSignInMutation } from "../redux/features/auth/authApi.js";
 import setToLocalStorage from "../utils/setToLocalStorage.js";
 
 const SignIn = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [severity, setSeverity] = useState("success");
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const {
@@ -35,12 +40,19 @@ const SignIn = () => {
   const [signIn] = useUserSignInMutation();
 
   const onSubmit = async (data) => {
-    try {
-      const res = await signIn(data);
-      setToLocalStorage("Token", res?.data?.data);
-      navigate("/");
-    } catch (err) {
-      console.error(err);
+    const res = await signIn(data).unwrap();
+    if (res?.success) {
+      setToLocalStorage("Token", res?.data);
+      setOpen(true);
+      setSeverity("success");
+      setSnackbarMessage(res?.message);
+      setTimeout(() => {
+        navigate("/");
+      }, 2100);
+    } else {
+      setOpen(true);
+      setSeverity("error");
+      setSnackbarMessage("Please enter valid credentials");
     }
   };
 
@@ -129,7 +141,12 @@ const SignIn = () => {
           </Grid>
         </Grid>
       </form>
-      {/*<CustomSnackBar open={open} setOpen={setOpen} message={snackbarMessage} severity={severity}/>*/}
+      <CustomSnackBar
+        open={open}
+        setOpen={setOpen}
+        message={snackbarMessage}
+        severity={severity}
+      />
     </Container>
   );
 };

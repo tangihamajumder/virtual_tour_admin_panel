@@ -10,13 +10,18 @@ import Button from "@mui/material/Button";
 import axios from "axios";
 import { useState } from "react";
 import { useAddInstructorMutation } from "../redux/features/instructors/instructorsApi.js";
+import CustomSnackBar from "./CustomSnackbar.jsx";
 
-const AddInstructorModal = ({ open, onClose }) => {
+const AddInstructorModal = ({ openModal, onClose }) => {
   const [instructorDetails, setInstructorDetails] = useState({
     imgURL: "",
     prof: "",
     desc: "",
   });
+
+  const [open, setOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [severity, setSeverity] = useState("success");
 
   const [addInstructor] = useAddInstructorMutation();
 
@@ -47,10 +52,21 @@ const AddInstructorModal = ({ open, onClose }) => {
   const handleSubmit = async () => {
     const res = await addInstructor(instructorDetails).unwrap();
     console.log("res", res);
-    onClose();
+    if (res?.success) {
+      setOpen(true);
+      setSeverity("success");
+      setSnackbarMessage(res?.message);
+      setTimeout(() => {
+        onClose();
+      }, 1000);
+    } else {
+      setOpen(true);
+      setSeverity("error");
+      setSnackbarMessage("Something went wrong");
+    }
   };
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={openModal} onClose={onClose}>
       <DialogTitle>Add new course</DialogTitle>
       <DialogContent>
         <Grid container spacing={3} sx={{ mt: 1 }}>
@@ -90,6 +106,12 @@ const AddInstructorModal = ({ open, onClose }) => {
           Submit
         </Button>
       </DialogActions>
+      <CustomSnackBar
+        open={open}
+        setOpen={setOpen}
+        message={snackbarMessage}
+        severity={severity}
+      />
     </Dialog>
   );
 };

@@ -7,14 +7,15 @@ import {
   TextField,
 } from "@mui/material";
 import Button from "@mui/material/Button";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import {
   useEditCourseMutation,
   useGetCourseByIdQuery,
 } from "../redux/features/courses/coursesApi.js";
-import axios from "axios";
+import CustomSnackBar from "./CustomSnackbar.jsx";
 
-const EditCourseModal = ({ open, onClose, courseId }) => {
+const EditCourseModal = ({ openModal, onClose, courseId }) => {
   const [courseDetails, setCourseDetails] = useState({
     imgURL: "",
     title: "",
@@ -22,6 +23,9 @@ const EditCourseModal = ({ open, onClose, courseId }) => {
     students: "",
     desc: "",
   });
+  const [open, setOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [severity, setSeverity] = useState("success");
 
   const { data: courseData } = useGetCourseByIdQuery(courseId);
 
@@ -61,7 +65,18 @@ const EditCourseModal = ({ open, onClose, courseId }) => {
       payload: courseDetails,
     };
     const res = await editCourse(data).unwrap();
-    onClose();
+    if (res?.success) {
+      setOpen(true);
+      setSeverity("success");
+      setSnackbarMessage(res?.message);
+      setTimeout(() => {
+        onClose();
+      }, 700);
+    } else {
+      setOpen(true);
+      setSeverity("error");
+      setSnackbarMessage("Something went wrong");
+    }
   };
 
   const handleFieldChange = (e) => {
@@ -70,7 +85,7 @@ const EditCourseModal = ({ open, onClose, courseId }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={openModal} onClose={onClose}>
       <DialogTitle>Edit course Information</DialogTitle>
       <DialogContent>
         <Grid container spacing={3} sx={{ mt: 1 }}>
@@ -121,6 +136,12 @@ const EditCourseModal = ({ open, onClose, courseId }) => {
           Submit
         </Button>
       </DialogActions>
+      <CustomSnackBar
+        open={open}
+        setOpen={setOpen}
+        message={snackbarMessage}
+        severity={severity}
+      />
     </Dialog>
   );
 };
