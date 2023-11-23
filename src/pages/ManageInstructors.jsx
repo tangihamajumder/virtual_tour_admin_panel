@@ -80,10 +80,10 @@ const ManageInstructors = () => {
         Add Instructor
       </Button>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={1}>
         {instructors?.data.map((instructor, index) => (
           <Grid item key={index}>
-            <Card sx={{ width: 345 }}>
+            <Card sx={{ width: 300 }}>
               <CardMedia
                 sx={{ height: 250 }}
                 image={instructor.imgURL}

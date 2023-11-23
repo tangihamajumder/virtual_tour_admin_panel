@@ -17,8 +17,8 @@ import HourglassTopRoundedIcon from "@mui/icons-material/HourglassTopRounded";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import CustomSnackBar from "../components/CustomSnackbar.jsx";
 import {
-    useDeleteCoursesMutation,
-    useGetAllCoursesQuery,
+  useDeleteCoursesMutation,
+  useGetAllCoursesQuery,
 } from "../redux/features/courses/coursesApi.js";
 
 const ManageCourses = () => {
@@ -81,7 +81,7 @@ const ManageCourses = () => {
       >
         Add Course
       </Button>
-      <Grid container spacing={4}>
+      <Grid container spacing={3}>
         {courses?.data?.map((course, index) => (
           <Grid item xs={12} md={4} key={index}>
             <Card sx={{ maxWidth: 345 }}>
@@ -106,7 +106,7 @@ const ManageCourses = () => {
                   {course.desc}
                 </Typography>
 
-                <Grid container spacing={4}>
+                <Grid container spacing={3}>
                   <Grid item sx={{ display: "flex", alignItems: "center" }}>
                     <Box sx={{ display: "flex", mr: 1 }}>
                       <PeopleAltIcon />
@@ -134,7 +134,7 @@ const ManageCourses = () => {
                       alignItems: "center",
                     }}
                   >
-                    <Box sx={{ display: "flex", mr: 1 }}>
+                    <Box sx={{ display: "flex", mr: 0.5 }}>
                       <AttachMoneyRoundedIcon />
                     </Box>
                     <Box>9,999</Box>
