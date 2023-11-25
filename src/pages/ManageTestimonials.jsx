@@ -15,7 +15,13 @@ const ManageTestimonials = () => {
   const handleCloseAddModal = () => {
     setAddModalOpen(false);
   };
-
+  const styles = {
+    media: {
+      height: 0,
+      paddingTop: "100%", // 16:9,
+      marginTop: "10%",
+    },
+  };
   return (
     <Container>
       <Button
@@ -26,14 +32,15 @@ const ManageTestimonials = () => {
       >
         Add Testimonials
       </Button>
-      <Grid container spacing={3}>
+      <Grid container spacing={2}>
         {testimonials?.data.map((testimonial, index) => (
           <Grid item key={index}>
             <Card sx={{ width: 345 }}>
               <CardMedia
-                sx={{ height: 250 }}
+                sx={{ height: 300 }}
                 image={testimonial.imgURL}
                 title={testimonial.prof}
+                style={styles.media}
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
