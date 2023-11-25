@@ -10,7 +10,7 @@ import { useGetAllTestimonialsQuery } from "../redux/features/testimonials/testi
 
 const ManageTestimonials = () => {
   const { data: testimonials } = useGetAllTestimonialsQuery();
-  const [isAddModalOpen, setAddModalOpen] = useState(false);
+  const [isAddModalOpen, setAddModalOpen] = useState(true);
 
   const handleCloseAddModal = () => {
     setAddModalOpen(false);
@@ -55,7 +55,7 @@ const ManageTestimonials = () => {
       </Grid>
 
       <AddTestimonialModal
-        open={isAddModalOpen}
+        openModal={isAddModalOpen}
         onClose={handleCloseAddModal}
       />
     </Container>
